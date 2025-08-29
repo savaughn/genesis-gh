@@ -5,9 +5,9 @@
 #include "bt.h"
 
 #define FIRE_TIME 110
-#define DIFY FIX16(TARGET_HEIGHT - TRACK_HEIGHT)
-#define DIFX (YELLOW_X_START - FIX16(YELLOW_X))
-#define SCALE F16_mul(DIFX, DIFY)
+#define DIFY FIX16(TARGET_HEIGHT) - FIX16(TRACK_HEIGHT)
+#define DIFX YELLOW_X_START - FIX16(YELLOW_X)
+#define SCALE F16_div(DIFX, DIFY)
 
 // Define the actual variables
 LNotes *note_start;
@@ -27,7 +27,7 @@ void createList_Note()
 // Returns:
 //	0 - if there is no memory to insert
 //	1 - if managed to insert
-u8 insert_Note(Sprite *sprite, s16 x, s16 y, Note type)
+u8 insert_Note(Sprite *sprite, f16 x, s16 y, Note type)
 {
     LNotes *p;
     // MEM_pack();
@@ -70,7 +70,7 @@ void createList_Bar()
 // Returns:
 //	0 - if there is no memory to insert
 //	1 - if managed to insert
-u8 insert_Bar(Sprite *sprite, s16 x, s16 y, Note type, s16 duration)
+u8 insert_Bar(Sprite *sprite, f16 x, s16 y, Note type, s16 duration)
 {
     LBars *p;
     
@@ -197,7 +197,7 @@ s16 updatePosition_Note(u8 velocity, s16 score)
                 }
                 else
                 {
-                    SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
+                    SPR_setPosition(ptr->sprite,  F16_toInt(ptr->x), ptr->y);
                 } 
                 if((ptr->y - TRACK_HEIGHT) % 19 == 0 && ptr->y < 214) // Divide the track into 7 segments of 19px height each with a note size
                 {
@@ -306,7 +306,7 @@ s16 updatePosition_Bar(u8 velocity, s16 score)
                 }
                 else
                 {
-                    SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
+                    SPR_setPosition(ptr->sprite,  F16_toInt(ptr->x), ptr->y);
                 }
                 if( velocity == 3)
                 {
@@ -314,15 +314,15 @@ s16 updatePosition_Bar(u8 velocity, s16 score)
                     {
                         if(ptr->type == YELLOW)
                         {
-                            insert_Bar(SPR_addSprite(&barraY , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), YELLOW_B_X_START, TRACK_HEIGHT, YELLOW, ptr->duration-45);
+                            insert_Bar(SPR_addSprite(&barraY , F16_toInt(ptr->x), TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), YELLOW_B_X_START, TRACK_HEIGHT, YELLOW, ptr->duration-45);
                         }
                         if(ptr->type == GREEN)
                         {
-                            insert_Bar(SPR_addSprite(&barraG , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, TRACK_HEIGHT, GREEN, ptr->duration-45);
+                            insert_Bar(SPR_addSprite(&barraG , F16_toInt(ptr->x), TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, TRACK_HEIGHT, GREEN, ptr->duration-45);
                         }
                         if(ptr->type == RED)
                         {
-                            insert_Bar(SPR_addSprite(&barraR , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), RED_B_X_START, TRACK_HEIGHT, RED, ptr->duration-45);
+                            insert_Bar(SPR_addSprite(&barraR , F16_toInt(ptr->x), TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), RED_B_X_START, TRACK_HEIGHT, RED, ptr->duration-45);
                         }
                     }
                 }
@@ -331,15 +331,15 @@ s16 updatePosition_Bar(u8 velocity, s16 score)
                     {
                         if(ptr->type == YELLOW)
                         {
-                            insert_Bar(SPR_addSprite(&barraY , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), YELLOW_B_X_START, TRACK_HEIGHT, YELLOW, ptr->duration-45);
+                            insert_Bar(SPR_addSprite(&barraY , F16_toInt(ptr->x), TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), YELLOW_B_X_START, TRACK_HEIGHT, YELLOW, ptr->duration-45);
                         }
                         if(ptr->type == GREEN)
                         {
-                            insert_Bar(SPR_addSprite(&barraG , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, TRACK_HEIGHT, GREEN, ptr->duration-45);
+                            insert_Bar(SPR_addSprite(&barraG , F16_toInt(ptr->x), TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, TRACK_HEIGHT, GREEN, ptr->duration-45);
                         }
                         if(ptr->type == RED)
                         {
-                            insert_Bar(SPR_addSprite(&barraR , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), RED_B_X_START, TRACK_HEIGHT, RED, ptr->duration-45);
+                            insert_Bar(SPR_addSprite(&barraR , F16_toInt(ptr->x), TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), RED_B_X_START, TRACK_HEIGHT, RED, ptr->duration-45);
                         }
                     }
                 }             

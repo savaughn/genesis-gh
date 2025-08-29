@@ -6,6 +6,7 @@
         "inc",
         "C:\\sgdk165\\inc",
         "C:\\sgdk165\\res",
+        "/opt/toolchains/mars/m68k-elf/inc"
     ],
     "files.associations": {
         "musicas.h": "c",

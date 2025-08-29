@@ -15,7 +15,7 @@
 typedef struct Temp
 {
     Sprite *sprite;
-    s16 x;
+    f16 x;
     s16 y;
     Note type;
     struct Temp *next;
@@ -25,7 +25,7 @@ typedef struct Temp
 typedef struct TempB
 {
     Sprite *sprite;
-    s16 x;
+    f16 x;
     s16 y;
     Note type;
     s16 duration;
@@ -40,12 +40,12 @@ extern LBars *bar_start;
 extern Sprite *fireR, *fireG, *fireY;
 
 void createList_Note();
-u8 insert_Note(Sprite *sprite, s16 x, s16 y, Note type);
+u8 insert_Note(Sprite *sprite, f16 x, s16 y, Note type);
 s16 updatePosition_Note(u8 velocity, s16 score);
 u16 listSize_Note(u8 list);
 
 void createList_Bar();
-u8 insert_Bar(Sprite *sprite, s16 x, s16 y, Note type, s16 duration);
+u8 insert_Bar(Sprite *sprite, f16 x, s16 y, Note type, s16 duration);
 s16 updatePosition_Bar(u8 velocity, s16 score);
 
 void clear_lists();

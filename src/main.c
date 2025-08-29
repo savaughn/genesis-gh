@@ -519,10 +519,10 @@ int main(_Bool)
                 }
                 else if (notes[nota_index] & GREEN)
                 {
-                    insert_Note(SPR_addSprite(&btG, GREEN_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), GREEN_X, TRACK_HEIGHT, GREEN);
+                    insert_Note(SPR_addSprite(&btG, GREEN_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), GREEN_X_START, TRACK_HEIGHT, GREEN);
                     if (durations[nota_index] > 0)
                     {
-                        insert_Bar(SPR_addSprite(&barraG, GREEN_B_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), GREEN_B_X, TRACK_HEIGHT, GREEN, durations[nota_index]);
+                        insert_Bar(SPR_addSprite(&barraG, GREEN_B_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), GREEN_B_X_START, TRACK_HEIGHT, GREEN, durations[nota_index]);
                     }
                 }
                 else if (notes[nota_index] & RED)
