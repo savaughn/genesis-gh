@@ -1,24 +1,28 @@
-#include "controles.h"
+#include "control.h"
 #include "timer.h"
 
-void controle_iniciaVariaveis()
+// Define the actual variables
+bool J1A, J1B, J1C, J1S, J1DOWN, J1UP;
+u16 J1ACount, J1BCount, J1CCount;
+
+void control_initializeVariables()
 {
     J1A = 0;
     J1B = 0;
     J1C = 0;
     J1S = 0;
-    J1BAIXO = 0;
-    J1CIMA = 0;
+    J1DOWN = 0;
+    J1UP = 0;
     J1ACount = 0;
     J1BCount = 0;
     J1CCount = 0;
 }
 
-void controle_Handler(u16 joy, u16 changed, u16 state)
+void control_Handler(u16 joy, u16 changed, u16 state)
 {
 	if (joy == JOY_1)
 	{
-		// detecta botão A pressionado
+		// detect button A pressed
         if (changed & BUTTON_A)
         {
             if(state & BUTTON_A )
@@ -26,13 +30,13 @@ void controle_Handler(u16 joy, u16 changed, u16 state)
                 J1A = 1;
                 J1ACount = getTick();
             }
-            // botão A solto
+            // button A released
             else
             {
                 J1A = 0;
             }
         }
-        // detecta botão B pressionado
+        // detect button B pressed
         if (changed & BUTTON_B)
         {
             if(state & BUTTON_B )
@@ -40,13 +44,13 @@ void controle_Handler(u16 joy, u16 changed, u16 state)
                 J1B = 1;
                 J1BCount = getTick();
             }
-            // botão B solto
+            // button B released
             else
             {
                 J1B = 0;
             }
         }
-        // detecta botão C pressionado
+        // detect button C pressed
         if (changed & BUTTON_C)
         {
             if(state & BUTTON_C )
@@ -54,7 +58,7 @@ void controle_Handler(u16 joy, u16 changed, u16 state)
                 J1C = 1;
                 J1CCount = getTick();
             }
-            // botão C solto
+            // button C released
             else
             {
                 J1C = 0;
@@ -66,7 +70,7 @@ void controle_Handler(u16 joy, u16 changed, u16 state)
             {
                 J1S = 1;
             }
-            // botão C solto
+            // button C released
             else
             {
                 J1S = 0;
@@ -77,22 +81,22 @@ void controle_Handler(u16 joy, u16 changed, u16 state)
         {
             if(state & BUTTON_DOWN )
             {
-                J1BAIXO = 1;
+                J1DOWN = 1;
             }
             else
             {
-                J1BAIXO = 0;
+                J1DOWN = 0;
             }
         }
         if (changed & BUTTON_UP)
         {
             if(state & BUTTON_UP )
             {
-                J1CIMA = 1;
+                J1UP = 1;
             }
             else
             {
-                J1CIMA = 0;
+                J1UP = 0;
             }
         }
         
