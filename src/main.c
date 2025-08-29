@@ -49,7 +49,7 @@ int main(_Bool)
     XGM_setPCM(SFX_ERROR, error_sfx, sizeof(error_sfx));
     XGM_setPCM(SFX_CLICK, click_sfx, sizeof(click_sfx));
 
-    //inicializacao de sprites
+    //sprite initialization
     SPR_init();
 
     JOY_init();
@@ -69,7 +69,7 @@ int main(_Bool)
     u16 note_index = 0;
     bool resume = 0;
 
-    u32 creditos_time = 0xFFFFFFFF;
+    u32 credits_time = 0xFFFFFFFF;
 
     enum States state = MAIN_MENU;
     enum States previous_state = -1;
@@ -112,9 +112,9 @@ int main(_Bool)
                 
                 previous_state = state;
                 VDP_drawImageEx(BG_A, &creditos, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, TRUE, TRUE);
-                creditos_time = getTick();
+                credits_time = getTick();
             }
-            if(getTick() - creditos_time > 900)
+            if(getTick() - credits_time > 900)
             {
                 PAL_fadeOutPalette(PAL0, 60, FALSE);
                 state = MAIN_MENU;
@@ -273,7 +273,7 @@ int main(_Bool)
                 // Save the selected music index
                 selected_music_index = cursorY;
                 
-                //selec sonic
+                //select sonic
                 if (cursorY == 0)
                 {
                     music = SONIC;
@@ -313,7 +313,7 @@ int main(_Bool)
                 }
                 else if (cursorY == 9)
                 {
-                    music = PHATASY;
+                    music = PHANTASY;
                 }
                 state = GAME;
             }
@@ -475,7 +475,7 @@ int main(_Bool)
                         loops = smooth_loops;
                         break;
                     
-                     case PHATASY:
+                     case PHANTASY:
                         notes = phantasy_notes;
                         times = phantasy_times;
                         music_size = phantasy_size;
@@ -754,7 +754,7 @@ int main(_Bool)
                 VDP_clearTextLine(15);
                 VDP_clearTextLine(16);
 
-                //voltar
+                //return
                 if (cursorY == 14)
                 {
                     state = GAME;
@@ -768,7 +768,7 @@ int main(_Bool)
                     if (fireG) fireG->timer = 1;
                     if (fireY) fireY->timer = 1;
                 }
-                //sair
+                //exit
                 else if (cursorY == 15)
                 {
                     state = MAIN_MENU;
@@ -791,7 +791,7 @@ int main(_Bool)
                     SPR_reset();
                     MEM_pack();
                 }
-                //reiniciar
+                //restart
                 else
                 {
                     state = GAME;

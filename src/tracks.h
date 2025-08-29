@@ -38,7 +38,7 @@ typedef enum // Create an ENUM to identify a music
 	TOP_GEAR,
 	ALTERED,
 	SMOOTH,
-	PHATASY,
+	PHANTASY,
 	TRACK_COUNT,
 } Music; // Define a music
 

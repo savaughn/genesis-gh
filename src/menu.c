@@ -6,7 +6,7 @@
 #define CENTER_Y 14
 
 const Option pause_options[NUM_PAUSE_OPTIONS] = {
-    {CENTER_X-2, CENTER_Y, "RETURN"},
+    {CENTER_X-2, CENTER_Y, "RESUME"},
     {CENTER_X-2, CENTER_Y+1, "EXIT"},
     {CENTER_X-2, CENTER_Y+2, "RESTART"},
 };
