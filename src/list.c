@@ -1,7 +1,7 @@
-#include "lista.h"
-#include "controles.h"
+#include "list.h"
+#include "control.h"
 #include "timer.h"
-#include "musicas.h"
+#include "tracks.h"
 #include "bt.h"
 
 #define FIRE_TIME 110
@@ -9,6 +9,10 @@
 #define DIFX (YELLOW_X_START - FIX16(YELLOW_X))
 #define SCALE F16_mul(DIFX, DIFY)
 
+// Define the actual variables
+LNotes *note_start;
+LBars *bar_start;
+Sprite *fireR, *fireG, *fireY;
 
 static u32 fireTimeR = 0, fireTimeG = 0, fireTimeY = 0;
 

@@ -3,7 +3,7 @@
 
 #include <genesis.h>
 #include <memory.h>
-#include "musicas.h"
+#include "tracks.h"
 
 
 #define WIDTH 320
@@ -34,10 +34,10 @@ typedef struct TempB
 
 
 
-LNotes *note_start;
-LBars *bar_start;
+extern LNotes *note_start;
+extern LBars *bar_start;
 
-Sprite *fireR, *fireG, *fireY;
+extern Sprite *fireR, *fireG, *fireY;
 
 void createList_Note();
 u8 insert_Note(Sprite *sprite, s16 x, s16 y, Note type);

@@ -2,7 +2,7 @@
 #define __MENU_H__
 
 #include <genesis.h>
-#include "musicas.h"
+#include "tracks.h"
 
 #define NUM_PAUSE_OPTIONS 3
 #define NUM_END_OPTIONS 3
@@ -24,9 +24,9 @@ typedef struct
     u8 difficulty;
 } MusicOption;
 
-const MusicOption music_options[NUM_MUSICAS];
-const Option pause_options[NUM_END_OPTIONS];
-const Option end_options[NUM_END_OPTIONS];
+extern const MusicOption music_options[NUM_MUSICAS];
+extern const Option pause_options[NUM_END_OPTIONS];
+extern const Option end_options[NUM_END_OPTIONS];
 
 void show_initial_menu();
 void show_pause_menu();

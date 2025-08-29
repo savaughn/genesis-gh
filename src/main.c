@@ -5,13 +5,13 @@
  **/
 #include <genesis.h>
 #include <string.h>
-#include "musicas.h"
+#include "tracks.h"
 #include "bg.h"
 #include "bt.h"
-#include "controles.h"
+#include "control.h"
 #include <timer.h>
 #include "sound.h"
-#include "lista.h"
+#include "list.h"
 #include "menu.h"
 
 #define SFX_ERROR 64
