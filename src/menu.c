@@ -11,7 +11,7 @@ const Option pause_options[NUM_PAUSE_OPTIONS] = {
     {CENTER_X-2, CENTER_Y+2, "RESTART"},
 };
 
-const MusicOption music_options[NUM_MUSICAS] = {
+const MusicOption music_options[TRACK_COUNT] = {
     {CENTER_X-2, CENTER_Y-4, "Green Hill Zone", &sonic_cover, 3},
     {CENTER_X-1, CENTER_Y-4, "Back in Black",  &sonic_cover, 1},
     {CENTER_X-2, CENTER_Y-4, "Streets of Rage",  &sor_conver, 2},

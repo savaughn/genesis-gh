@@ -5,7 +5,7 @@
 #include "tracks.h"
 
 #define NUM_PAUSE_OPTIONS 3
-#define NUM_END_OPTIONS 3
+#define NUM_END_OPTIONS 2
 
 // define the options structure
 typedef struct 
@@ -24,8 +24,8 @@ typedef struct
     u8 difficulty;
 } MusicOption;
 
-extern const MusicOption music_options[NUM_MUSICAS];
-extern const Option pause_options[NUM_END_OPTIONS];
+extern const MusicOption music_options[TRACK_COUNT];
+extern const Option pause_options[NUM_PAUSE_OPTIONS];
 extern const Option end_options[NUM_END_OPTIONS];
 
 void show_initial_menu();

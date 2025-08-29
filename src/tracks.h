@@ -39,7 +39,7 @@ typedef enum // Create an ENUM to identify a music
 	ALTERED,
 	SMOOTH,
 	PHATASY,
-	NUM_MUSICAS,
+	TRACK_COUNT,
 } Music; // Define a music
 
 extern const u32 sonic_times[434];

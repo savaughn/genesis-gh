@@ -35,12 +35,12 @@ char text[64];
 
 enum States
 {
-    CREDITOS,
-    MENU_INICIAL,
-    MUSICA,
-    MUSICAS,
-    PAUSA,
-    FIM_MUSICA,
+    CREDITS,
+    MAIN_MENU,
+    GAME,
+    TRACKS,
+    PAUSE,
+    TRACK_END,
 };
 
 int main(_Bool)
@@ -76,7 +76,7 @@ int main(_Bool)
 
     u32 creditos_time = 0xFFFFFFFF;
 
-    enum States state = CREDITOS;
+    enum States state = MAIN_MENU;
     enum States state_anterior = -1;
 
     Music music = BACK_IN_BLACK;
@@ -92,6 +92,7 @@ int main(_Bool)
 
     s16 cursorY;
     s16 cursorX;
+    s16 selected_music_index;
 
     s16 yOffsetBg = 0;
     
@@ -108,7 +109,7 @@ int main(_Bool)
     {
         switch (state)
         {
-            case CREDITOS:
+            case CREDITS:
             if (state_anterior != state)
             {
                 VDP_clearPlane(BG_A, TRUE);
@@ -121,10 +122,10 @@ int main(_Bool)
             if(getTick() - creditos_time > 900)
             {
                 PAL_fadeOutPalette(PAL0, 60, FALSE);
-                state = MENU_INICIAL;
+                state = MAIN_MENU;
             }
             break;
-        case MENU_INICIAL:
+        case MAIN_MENU:
             if (state_anterior != state)
             {
                 VDP_setTextPlane(BG_B);
@@ -147,12 +148,12 @@ int main(_Bool)
             {
                 XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
                 J1S = 0;
-                state = MUSICAS;
+                state = TRACKS;
                 SPR_releaseSprite(cursor);
                 VDP_clearTextLine(14);
             }          
             break;
-        case MUSICAS:
+        case TRACKS:
             if (state_anterior != state)
             {
                 VDP_setTextPlane(BG_B);
@@ -185,7 +186,7 @@ int main(_Bool)
             {
                 menu_movendo = 1;
                 J1DOWN = 0;
-                if (cursorY < NUM_MUSICAS -1)
+                if (cursorY < TRACK_COUNT -1)
                 {
                     cursorY++;
                 }
@@ -221,7 +222,7 @@ int main(_Bool)
                 }
                 else
                 {
-                    cursorY = NUM_MUSICAS -1;
+                    cursorY = TRACK_COUNT -1;
                 }
                 if( color_index > 0)
                 {
@@ -250,7 +251,7 @@ int main(_Bool)
                     yOffsetBg = 0;
                     menu_movendo =0;
                     VDP_drawText(music_options[cursorY].text, music_options[cursorY].x, music_options[cursorY].y);
-                    if (cursorY == NUM_MUSICAS - 1)
+                    if (cursorY == TRACK_COUNT - 1)
                     {
                         VDP_drawText(music_options[0].text, music_options[0].x + 1, 26);
                     }
@@ -273,6 +274,10 @@ int main(_Bool)
                 VDP_clearTextLine(music_options[cursorY].y);
                 VDP_clearTextArea(music_options[cursorY].x -2, 26, 32, 1);
                 VDP_setHorizontalScroll(BG_A, 0); //reset horizontal scroll
+                
+                // Save the selected music index
+                selected_music_index = cursorY;
+                
                 //selec sonic
                 if (cursorY == 0)
                 {
@@ -315,10 +320,10 @@ int main(_Bool)
                 {
                     music = PHATASY;
                 }
-                state = MUSICA;
+                state = GAME;
             }
             break;
-        case MUSICA:
+        case GAME:
             if (state_anterior != state)
             {
                 VDP_setTextPlane(BG_A);
@@ -629,7 +634,7 @@ int main(_Bool)
             if (J1S)
             {
                 J1S = 0;
-                state = PAUSA;
+                state = PAUSE;
                 pause_time = getTick();
             }
 
@@ -674,7 +679,7 @@ int main(_Bool)
 
             if((notes_remaining  == 0 && getTick() - final_time > 1000) || perdeu)
             {
-                state = FIM_MUSICA;
+                state = TRACK_END;
                 perdeu = FALSE;
 
                 clear_lists();
@@ -698,7 +703,7 @@ int main(_Bool)
             }
 
             break;
-        case PAUSA:
+        case PAUSE:
             if (state_anterior != state)
             {
                 VDP_setTextPlane(BG_A);
@@ -757,7 +762,7 @@ int main(_Bool)
                 //voltar
                 if (cursorY == 14)
                 {
-                    state = MUSICA;
+                    state = GAME;
                     resume = 1;
                     init_time = getTick() - pause_time + init_time;
                     XGM_resumePlay();
@@ -769,7 +774,7 @@ int main(_Bool)
                 //sair
                 else if (cursorY == 15)
                 {
-                    state = MENU_INICIAL;
+                    state = MAIN_MENU;
                     clear_lists();
                     SPR_releaseSprite(btr2);
                     SPR_releaseSprite(btg2);
@@ -792,7 +797,7 @@ int main(_Bool)
                 //reiniciar
                 else
                 {
-                    state = MUSICA;
+                    state = GAME;
                     clear_lists();
                     SPR_releaseSprite(btr2);
                     SPR_releaseSprite(btg2);
@@ -813,18 +818,23 @@ int main(_Bool)
                 }
             }
             break;
-        case FIM_MUSICA:
+        case TRACK_END:
             if (state_anterior != state)
             {
                 VDP_setTextPlane(BG_B);
                 VDP_resetScreen();
                 PAL_setColors(0, (u16 *)palette_black, 64, DMA); // set all palettes to black
                 state_anterior = state;
-                show_menu((const Option*)music_options, NUM_MUSICAS);
+                
+                // Show current track name
+                VDP_drawText(music_options[selected_music_index].text, music_options[selected_music_index].x, music_options[selected_music_index].y);
+                
+                // Show end menu options
+                show_menu(end_options, NUM_END_OPTIONS);
                 PAL_setPalette(PAL3, Cursor.palette->data, DMA);
-                cursorY = 14;
+                cursorY = 0; // Reset cursor to first end option (EXIT)
                 cursorX = 17 * 8;
-                cursor = SPR_addSprite(&Cursor, cursorX, cursorY * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                cursor = SPR_addSprite(&Cursor, cursorX, 14 * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
                 XGM_stopPlay();
 
                 VDP_drawImageEx(BG_A, &concert, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
@@ -837,29 +847,29 @@ int main(_Bool)
             if (J1DOWN)
             {
                 J1DOWN = 0;
-                if (cursorY < 15)
+                if (cursorY < NUM_END_OPTIONS - 1)
                 {
                     cursorY++;
                 }
                 else
                 {
-                    cursorY = 14;
+                    cursorY = 0;
                 }
-                SPR_setPosition(cursor, cursorX, cursorY * 8);
+                SPR_setPosition(cursor, cursorX, (14 + cursorY) * 8);
                 XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
             }
             if (J1UP)
             {
                 J1UP = 0;
-                if (cursorY > 14)
+                if (cursorY > 0)
                 {
                     cursorY--;
                 }
                 else
                 {
-                    cursorY = 15;
+                    cursorY = NUM_END_OPTIONS - 1;
                 }
-                SPR_setPosition(cursor, cursorX, cursorY * 8);
+                SPR_setPosition(cursor, cursorX, (14 + cursorY) * 8);
                 XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
             }
             if (J1S | J1A | J1B | J1C)
@@ -874,13 +884,13 @@ int main(_Bool)
                 VDP_clearTextLine(14);
                 VDP_clearTextLine(15);
 
-                 if (cursorY > 14)
+                 if (cursorY == 1) // RESTART option
                  {
-                    state = MUSICA;
+                    state = GAME;
                  }
-                 else
+                 else // EXIT option (cursorY == 0)
                  {
-                    state = MENU_INICIAL;
+                    state = MAIN_MENU;
                  }
             }
             break;
