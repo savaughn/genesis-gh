@@ -1,55 +1,55 @@
-#ifndef __LISTA_H__
-#define __LISTA_H__
+#ifndef __LIST_H__
+#define __LIST_H__
 
 #include <genesis.h>
 #include <memory.h>
 #include "musicas.h"
 
 
-#define LARGURA 320
-#define ALTURA 224
-#define ALTURA_MIRA 195
-#define ALTURA_PISTA 62
+#define WIDTH 320
+#define HEIGHT 224
+#define TARGET_HEIGHT 195
+#define TRACK_HEIGHT 62
 
-// define a estrutura do nodo
+// define the node structure
 typedef struct Temp
 {
     Sprite *sprite;
     s16 x;
     s16 y;
-    Nota tipo;
-    struct Temp *prox;
-} LNotas;
+    Note type;
+    struct Temp *next;
+} LNotes;
 
-// define a estrutura do nodo
+// define the node structure
 typedef struct TempB
 {
     Sprite *sprite;
     s16 x;
     s16 y;
-    Nota tipo;
-    s16 duracao;
-    struct TempB *prox;
-} LBarras;
+    Note type;
+    s16 duration;
+    struct TempB *next;
+} LBars;
 
 
 
-LNotas *inicio_Nota;
-LBarras *inicio_Barra;
+LNotes *note_start;
+LBars *bar_start;
 
-Sprite *fogoR, *fogoG, *fogoY;
+Sprite *fireR, *fireG, *fireY;
 
-void CriaLista_Nota();
-u8 Insere_Nota(Sprite *sprite, s16 x, s16 y, Nota tipo);
-s16 atualizaPosicao_Nota(u8 velocidade, s16 placar);
-u16 tamanhoLista_Nota(u8 lista);
+void createList_Note();
+u8 insert_Note(Sprite *sprite, s16 x, s16 y, Note type);
+s16 updatePosition_Note(u8 velocity, s16 score);
+u16 listSize_Note(u8 list);
 
-void CriaLista_Barra();
-u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, Nota tipo, s16 duracao);
-s16 atualizaPosicao_Barra(u8 velocidade, s16 placar);
+void createList_Bar();
+u8 insert_Bar(Sprite *sprite, s16 x, s16 y, Note type, s16 duration);
+s16 updatePosition_Bar(u8 velocity, s16 score);
 
-void limpa_listas();
+void clear_lists();
 
-void esconde_fogo();
+void hide_fire();
 
 #endif

@@ -4,33 +4,33 @@
 #include <genesis.h>
 #include "musicas.h"
 
-#define NUM_OPCOES_PAUSA 3
-#define NUM_OPCOES_FIM 3
+#define NUM_PAUSE_OPTIONS 3
+#define NUM_END_OPTIONS 3
 
-// define a estrutura das opções
+// define the options structure
 typedef struct 
 {
     s16 x;
     s16 y;
-    char texto[32];
-} Opcao;
+    char text[32];
+} Option;
 
 typedef struct 
 {
     s16 x;
     s16 y;
-    char texto[32];
+    char text[32];
     const Image* image;
-    u8 dificulade;
-} OpcaoMusica;
+    u8 difficulty;
+} MusicOption;
 
-const OpcaoMusica opcoes_musicas[NUM_MUSICAS];
-const Opcao opcoes_pause[NUM_OPCOES_FIM];
-const Opcao opcoes_fim[NUM_OPCOES_FIM];
+const MusicOption music_options[NUM_MUSICAS];
+const Option pause_options[NUM_END_OPTIONS];
+const Option end_options[NUM_END_OPTIONS];
 
-void mostra_menu_inicial();
-void mostra_menu_pausa();
+void show_initial_menu();
+void show_pause_menu();
 
-void mostra_menu(const Opcao *opcoes, u8 tamanho);
+void show_menu(const Option *options, u8 size);
 
 #endif

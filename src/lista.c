@@ -4,33 +4,33 @@
 #include "musicas.h"
 #include "bt.h"
 
-#define TEMPO_FOGO 110
-#define DIFY intToFix16(ALTURA_MIRA - ALTURA_PISTA)
-#define DIFX fix16Sub(AMARELO_X_INICIO, intToFix16(AMARELO_X))
-#define SCALE fix16Div(DIFX, DIFY) 
+#define FIRE_TIME 110
+#define DIFY FIX16(TARGET_HEIGHT - TRACK_HEIGHT)
+#define DIFX (YELLOW_X_START - FIX16(YELLOW_X))
+#define SCALE F16_mul(DIFX, DIFY)
 
 
-static u32 tempoFogoR = 0, tempoFogoG = 0, tempoFogoY = 0;
+static u32 fireTimeR = 0, fireTimeG = 0, fireTimeY = 0;
 
 //--------------------------------------------------------
-// Funcao que define a lista como vazia.
-void CriaLista_Nota()
+// Function that defines the list as empty.
+void createList_Note()
 {
-    inicio_Nota = NULL;
+    note_start = NULL;
 }
 //--------------------------------------------------------
-// Funcao que insere um elemento do inicio da lista.
-// Retorna:
-//	0 - se nao ha'  memoria para inserir
-//	1 - se conseguiu inserir
-u8 Insere_Nota(Sprite *sprite, s16 x, s16 y, Nota tipo)
+// Function that inserts an element at the beginning of the list.
+// Returns:
+//	0 - if there is no memory to insert
+//	1 - if managed to insert
+u8 insert_Note(Sprite *sprite, s16 x, s16 y, Note type)
 {
-    LNotas *p;
+    LNotes *p;
     // MEM_pack();
-    p = (LNotas *)MEM_alloc(sizeof(LNotas));
+    p = (LNotes *)MEM_alloc(sizeof(LNotes));
     if (p == NULL || sprite == NULL)
     {
-        // erro de alocação
+        // allocation error
         // KLog("error in allocation");
         return 0;
     }
@@ -38,17 +38,17 @@ u8 Insere_Nota(Sprite *sprite, s16 x, s16 y, Nota tipo)
     p->sprite = sprite;
     p->x = x;
     p->y = y;
-    p->tipo =  tipo;
-    p->prox = NULL;
+    p->type =  type;
+    p->next = NULL;
 
     SPR_setDepth(sprite, SPR_MIN_DEPTH);
 
-    if (inicio_Nota == NULL)
-        inicio_Nota = p;
+    if (note_start == NULL)
+        note_start = p;
     else
     {
-        p->prox = inicio_Nota;
-        inicio_Nota = p;
+        p->next = note_start;
+        note_start = p;
     }
     return 1;
 }
@@ -56,25 +56,25 @@ u8 Insere_Nota(Sprite *sprite, s16 x, s16 y, Nota tipo)
 
 
 //--------------------------------------------------------
-// Funcao que define a lista como vazia.
-void CriaLista_Barra()
+// Function that defines the list as empty.
+void createList_Bar()
 {
-    inicio_Barra = NULL;
+    bar_start = NULL;
 }
 //--------------------------------------------------------
-// Funcao que insere um elemento do inicio da lista.
-// Retorna:
-//	0 - se nao ha'  memoria para inserir
-//	1 - se conseguiu inserir
-u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, Nota tipo, s16 duracao)
+// Function that inserts an element at the beginning of the list.
+// Returns:
+//	0 - if there is no memory to insert
+//	1 - if managed to insert
+u8 insert_Bar(Sprite *sprite, s16 x, s16 y, Note type, s16 duration)
 {
-    LBarras *p;
+    LBars *p;
     
     // MEM_pack();
-    p = (LBarras *)MEM_alloc(sizeof(LBarras));
+    p = (LBars *)MEM_alloc(sizeof(LBars));
     if (p == NULL || sprite == NULL)
     {
-        // erro de alocação
+        // allocation error
         // KLog("error in allocation");
         return 0;
     }
@@ -82,162 +82,162 @@ u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, Nota tipo, s16 duracao)
     p->sprite = sprite;
     p->x = x;
     p->y = y;
-    p->tipo = tipo;
-    p->duracao = duracao;
-    p->prox = NULL;
+    p->type = type;
+    p->duration = duration;
+    p->next = NULL;
 
     SPR_setDepth(sprite, SPR_MIN_DEPTH);
 
-    if (inicio_Barra == NULL)
-        inicio_Barra = p;
+    if (bar_start == NULL)
+        bar_start = p;
     else
     {
-        LBarras *atual = inicio_Barra;
-        while ( atual->prox != NULL)
+        LBars *current = bar_start;
+        while ( current->next != NULL)
         {
-            atual = atual->prox;
+            current = current->next;
         }
-        atual->prox = p;
+        current->next = p;
     }
     return 1;
 }
 
 //--------------------------------------------------------
-// Funcao diz o tamanho da lista.
-// Retorna:
-//	tamanho da lista
-u16 tamanhoLista_Nota(u8 lista)
+// Function tells the size of the list.
+// Returns:
+//	list size
+u16 listSize_Note(u8 list)
 {
-    u16 tamanho = 0;
-    if ( lista == 0)
+    u16 size = 0;
+    if ( list == 0)
     {
-        if (inicio_Nota == NULL)
+        if (note_start == NULL)
             return 0;
-        LNotas *ptr = inicio_Nota;
-        for (tamanho = 0; ptr != NULL; tamanho++)
+        LNotes *ptr = note_start;
+        for (size = 0; ptr != NULL; size++)
         {
-            ptr = ptr->prox;
+            ptr = ptr->next;
         }
     }
-    else if(lista == 1)
+    else if(list == 1)
     {
-        if (inicio_Barra == NULL)
+        if (bar_start == NULL)
             return 0;
-        LBarras *ptr = inicio_Barra;
-        for (tamanho = 0; ptr != NULL; tamanho++)
+        LBars *ptr = bar_start;
+        for (size = 0; ptr != NULL; size++)
         {
-            ptr = ptr->prox;
+            ptr = ptr->next;
         }
     }
     
-    return tamanho;
+    return size;
 
 }
 
 
 //--------------------------------------------------------
-// Funcao que atualiza a posição das notas e detecta se o usuario aperto o botão na hora correta.
-// Retorna:
-//numero de notas acertadas, ou -1 se passou uma nota sem acertar;
-s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
+// Function that updates the position of notes and detects if the user pressed the button at the right time.
+// Returns:
+//number of correct notes, or -1 if a note was missed;
+s16 updatePosition_Note(u8 velocity, s16 score)
 {
-    LNotas *ptr, *antes;
-    if (inicio_Nota == NULL)
+    LNotes *ptr, *before;
+    if (note_start == NULL)
     {
-        return placar; // Lista vazia !!!
+        return score; // Empty list !!!
     }
     else
     {
-        ptr = inicio_Nota;
-        antes = inicio_Nota;
+        ptr = note_start;
+        before = note_start;
 
-        f16 v = intToFix16(velocidade);
+        f16 v = FIX16(velocity);
         bool update = FALSE;
         while (ptr != NULL)
         {
-            ptr->y = ptr->y + velocidade;
-            if (ptr->y >= ALTURA) // passou do limite
+            ptr->y = ptr->y + velocity;
+            if (ptr->y >= HEIGHT) // passed the limit
             {
                 if(SPR_isVisible(ptr->sprite, 1))
                 {
-                    placar --;
+                    score --;
                 }
-                if (ptr == inicio_Nota) // se esta removendo o primeiro da lista
+                if (ptr == note_start) // if removing the first in the list
                 {
-                    inicio_Nota = inicio_Nota->prox;
+                    note_start = note_start->next;
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
-                    ptr = inicio_Nota;
+                    ptr = note_start;
                     update = TRUE;
                 }
-                else // esta removendo do meio da lista
+                else // removing from the middle of the list
                 {
-                    antes->prox = ptr->prox; // Refaz o encadeamento
+                    before->next = ptr->next; // Redo the link
                     SPR_releaseSprite(ptr->sprite);
-                    MEM_free(ptr); // Libera a area do nodo
-                    ptr = antes->prox;
+                    MEM_free(ptr); // Free the node area
+                    ptr = before->next;
                     update = TRUE;
                 }
             }
             else
             {
-                if(ptr->tipo == AMARELA)
+                if(ptr->type == YELLOW)
                 {
-                    ptr->x = ptr->x - fix16Mul(SCALE, v);
-                    SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
+                    ptr->x = ptr->x - F16_mul(SCALE, v);
+                    SPR_setPosition(ptr->sprite,  F16_toInt(ptr->x), ptr->y);
                 }
-                else if(ptr->tipo == VEMELHA)
+                else if(ptr->type == RED)
                 {
-                    ptr->x = ptr->x + fix16Mul(SCALE, v);
-                    SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
+                    ptr->x = ptr->x + F16_mul(SCALE, v);
+                    SPR_setPosition(ptr->sprite,  F16_toInt(ptr->x), ptr->y);
                 }
                 else
                 {
                     SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
                 } 
-                if((ptr->y - ALTURA_PISTA) % 19 == 0 && ptr->y < 214) // Divide a pista em 7 seguimentos de 19px de altura cada um com um tamanho de nota
+                if((ptr->y - TRACK_HEIGHT) % 19 == 0 && ptr->y < 214) // Divide the track into 7 segments of 19px height each with a note size
                 {
-                    SPR_setFrame(ptr->sprite, (ptr->y - ALTURA_PISTA)/19);
+                    SPR_setFrame(ptr->sprite, (ptr->y - TRACK_HEIGHT)/19);
                 }
-                if(ptr->y > ALTURA_MIRA - 15 && ptr->y < ALTURA_MIRA + 15 )
+                if(ptr->y > TARGET_HEIGHT - 15 && ptr->y < TARGET_HEIGHT + 15 )
                 {
                     if(SPR_isVisible(ptr->sprite, 1))
                     {
-                        // sobe placar e deixa sprite invisivel 
-                        if( ptr->tipo == AMARELA && J1A )
+                        // increase score and make sprite invisible 
+                        if( ptr->type == YELLOW && J1A )
                         {
-                            placar++;
+                            score++;
                             J1A = 0;
                             SPR_setVisibility(ptr->sprite, HIDDEN);
-                            SPR_setFrame(fogoY,0);
-                            SPR_setVisibility(fogoY, VISIBLE);
-                            tempoFogoY = getTick();
+                            SPR_setFrame(fireY,0);
+                            SPR_setVisibility(fireY, VISIBLE);
+                            fireTimeY = getTick();
                         }
-                        if(ptr->tipo == VERDE && J1B)
+                        if(ptr->type == GREEN && J1B)
                         {
-                            placar++;
+                            score++;
                             J1B = 0;
                             SPR_setVisibility(ptr->sprite, HIDDEN);
-                            SPR_setFrame(fogoG,0);
-                            SPR_setVisibility(fogoG, VISIBLE);
-                            tempoFogoG = getTick();
+                            SPR_setFrame(fireG,0);
+                            SPR_setVisibility(fireG, VISIBLE);
+                            fireTimeG = getTick();
                         }
-                        if (ptr->tipo ==  VEMELHA && J1C )
+                        if (ptr->type == RED && J1C )
                         {
-                            placar++;
+                            score++;
                             J1C = 0;
                             SPR_setVisibility(ptr->sprite, HIDDEN);
-                            SPR_setFrame(fogoR,0);
-                            SPR_setVisibility(fogoR, VISIBLE);
-                            tempoFogoR = getTick();
+                            SPR_setFrame(fireR,0);
+                            SPR_setVisibility(fireR, VISIBLE);
+                            fireTimeR = getTick();
                         }
                     }
                 }
             }
             if(update == FALSE)
             {    
-                antes = ptr;
-                ptr = ptr->prox;
+                before = ptr;
+                ptr = ptr->next;
             }
             else
             {
@@ -245,138 +245,138 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
             }
         }
     }
-    return placar;
+    return score;
 }
 
 //--------------------------------------------------------
-// Funcao que atualiza a posição das barras e detecta se o usuario aperto o botão na hora correta.
-// Retorna:
-//pontuação referente as barras;
-s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
+// Function that updates the position of bars and detects if the user pressed the button at the right time.
+// Returns:
+//score related to bars;
+s16 updatePosition_Bar(u8 velocity, s16 score)
 {
-    LBarras *ptr, *antes;
-    if (inicio_Barra == NULL)
+    LBars *ptr, *before;
+    if (bar_start == NULL)
     {
-        return placar; // Lista vazia !!!
+        return score; // Empty list !!!
     }
     else
     {
-        ptr = inicio_Barra;
-        antes = inicio_Barra;
-        f16 v = intToFix16(velocidade);
+        ptr = bar_start;
+        before = bar_start;
+        f16 v = FIX16(velocity);
         bool update = FALSE;
         while (ptr != NULL)
         {
-            ptr->y = ptr->y + velocidade;
+            ptr->y = ptr->y + velocity;
 
-            if (ptr->y >= ALTURA) // passou do limite
+            if (ptr->y >= HEIGHT) // passed the limit
             {
-                if (ptr == inicio_Barra) // se esta removendo o primeiro da lista
+                if (ptr == bar_start) // if removing the first in the list
                 {
-                    inicio_Barra = inicio_Barra->prox;
+                    bar_start = bar_start->next;
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
-                    ptr = inicio_Barra;
+                    ptr = bar_start;
                     update = TRUE;
                 }
-                else // esta removendo do meio da lista
+                else // removing from the middle of the list
                 {
-                    antes->prox = ptr->prox; // Refaz o encadeamento
+                    before->next = ptr->next; // Redo the link
                     SPR_releaseSprite(ptr->sprite);
-                    MEM_free(ptr); // Libera a area do nodo
-                    ptr = antes->prox;
+                    MEM_free(ptr); // Free the node area
+                    ptr = before->next;
                     update = TRUE;
                 }
             }
             else
             {
-                if(ptr->tipo == AMARELA)
+                if(ptr->type == YELLOW)
                 {
-                    ptr->x = ptr->x - fix16Mul(SCALE, v);
-                    SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
+                    ptr->x = ptr->x - F16_mul(SCALE, v);
+                    SPR_setPosition(ptr->sprite,  F16_toInt(ptr->x), ptr->y);
                 }
-                else if(ptr->tipo == VEMELHA)
+                else if(ptr->type == RED)
                 {
-                    ptr->x = ptr->x + fix16Mul(SCALE, v);
-                    SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
+                    ptr->x = ptr->x + F16_mul(SCALE, v);
+                    SPR_setPosition(ptr->sprite,  F16_toInt(ptr->x), ptr->y);
                 }
                 else
                 {
                     SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
                 }
-                if( velocidade == 3)
+                if( velocity == 3)
                 {
-                    if(ptr->duracao > 0 && ptr->y == 6 + ALTURA_PISTA)
+                    if(ptr->duration > 0 && ptr->y == 6 + TRACK_HEIGHT)
                     {
-                        if(ptr->tipo == AMARELA)
+                        if(ptr->type == YELLOW)
                         {
-                            Insere_Barra(SPR_addSprite(&barraY , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_B_X_INICIO, ALTURA_PISTA, AMARELA, ptr->duracao-45);
+                            insert_Bar(SPR_addSprite(&barraY , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), YELLOW_B_X_START, TRACK_HEIGHT, YELLOW, ptr->duration-45);
                         }
-                        if(ptr->tipo == VERDE)
+                        if(ptr->type == GREEN)
                         {
-                            Insere_Barra(SPR_addSprite(&barraG , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, ALTURA_PISTA, VERDE, ptr->duracao-45);
+                            insert_Bar(SPR_addSprite(&barraG , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, TRACK_HEIGHT, GREEN, ptr->duration-45);
                         }
-                        if(ptr->tipo == VEMELHA)
+                        if(ptr->type == RED)
                         {
-                            Insere_Barra(SPR_addSprite(&barraR , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X_INICIO, ALTURA_PISTA, VEMELHA, ptr->duracao-45);
+                            insert_Bar(SPR_addSprite(&barraR , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), RED_B_X_START, TRACK_HEIGHT, RED, ptr->duration-45);
                         }
                     }
                 }
                 else{
-                    if(ptr->duracao > 0 && ptr->y == 8 + ALTURA_PISTA)
+                    if(ptr->duration > 0 && ptr->y == 8 + TRACK_HEIGHT)
                     {
-                        if(ptr->tipo == AMARELA)
+                        if(ptr->type == YELLOW)
                         {
-                            Insere_Barra(SPR_addSprite(&barraY , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_B_X_INICIO, ALTURA_PISTA, AMARELA, ptr->duracao-45);
+                            insert_Bar(SPR_addSprite(&barraY , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), YELLOW_B_X_START, TRACK_HEIGHT, YELLOW, ptr->duration-45);
                         }
-                        if(ptr->tipo == VERDE)
+                        if(ptr->type == GREEN)
                         {
-                            Insere_Barra(SPR_addSprite(&barraG , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, ALTURA_PISTA, VERDE, ptr->duracao-45);
+                            insert_Bar(SPR_addSprite(&barraG , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, TRACK_HEIGHT, GREEN, ptr->duration-45);
                         }
-                        if(ptr->tipo == VEMELHA)
+                        if(ptr->type == RED)
                         {
-                            Insere_Barra(SPR_addSprite(&barraR , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X_INICIO, ALTURA_PISTA, VEMELHA, ptr->duracao-45);
+                            insert_Bar(SPR_addSprite(&barraR , ptr->x, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), RED_B_X_START, TRACK_HEIGHT, RED, ptr->duration-45);
                         }
                     }
                 }             
-                if(ptr->y > ALTURA_MIRA - 5 && ptr->y < ALTURA_MIRA + 7 )
+                if(ptr->y > TARGET_HEIGHT - 5 && ptr->y < TARGET_HEIGHT + 7 )
                 {
                     u16 JOY1 = JOY_readJoypad(JOY_1);
                     if(SPR_isVisible(ptr->sprite, 1))
                     {
-                        // sobe placar e deixa sprite invisivel                         200
-                        if( ptr->tipo == AMARELA)
+                        // increase score and make sprite invisible                         200
+                        if( ptr->type == YELLOW)
                         {
                             if ((JOY1 & BUTTON_A))
                             {
-                                placar++;
+                                score++;
                                 SPR_setVisibility(ptr->sprite, HIDDEN);
-                                SPR_setFrame(fogoY,0);
-                                SPR_setVisibility(fogoY, VISIBLE);
-                                tempoFogoY = getTick();
+                                SPR_setFrame(fireY,0);
+                                SPR_setVisibility(fireY, VISIBLE);
+                                fireTimeY = getTick();
                             }
                             
                         }
-                        if(ptr->tipo == VERDE )
+                        if(ptr->type == GREEN )
                         {
                             if ((JOY1 & BUTTON_B))
                             {
-                                placar++;
+                                score++;
                                 SPR_setVisibility(ptr->sprite, HIDDEN);
-                                SPR_setFrame(fogoG,0);
-                                SPR_setVisibility(fogoG, VISIBLE);
-                                tempoFogoG = getTick();
+                                SPR_setFrame(fireG,0);
+                                SPR_setVisibility(fireG, VISIBLE);
+                                fireTimeG = getTick();
                             }
                         }
-                        if (ptr->tipo ==  VEMELHA)
+                        if (ptr->type == RED)
                         {
                             if ((JOY1 & BUTTON_C))
                             {
-                                placar++;
+                                score++;
                                 SPR_setVisibility(ptr->sprite, HIDDEN);
-                                SPR_setFrame(fogoR,0);
-                                SPR_setVisibility(fogoR, VISIBLE);    
-                                tempoFogoR = getTick();
+                                SPR_setFrame(fireR,0);
+                                SPR_setVisibility(fireR, VISIBLE);    
+                                fireTimeR = getTick();
                             }
                         }
                     }
@@ -384,8 +384,8 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
             }
             if(update == FALSE)
             {    
-                antes = ptr;
-                ptr = ptr->prox;
+                before = ptr;
+                ptr = ptr->next;
             }
             else
             {
@@ -393,42 +393,42 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
             }
         }
     }
-    return placar;
+    return score;
 }
 
 
-void limpa_listas()
+void clear_lists()
 {
-    LNotas *ptr;
-    LBarras *ptr2;
-    for (ptr = inicio_Nota; ptr != NULL; ptr = inicio_Nota)
+    LNotes *ptr;
+    LBars *ptr2;
+    for (ptr = note_start; ptr != NULL; ptr = note_start)
     {
-        inicio_Nota = inicio_Nota->prox;
+        note_start = note_start->next;
         SPR_releaseSprite(ptr->sprite);
         MEM_free(ptr);
     }
     
-    for (ptr2 = inicio_Barra; ptr2 != NULL; ptr2 = inicio_Barra)
+    for (ptr2 = bar_start; ptr2 != NULL; ptr2 = bar_start)
     {
-        inicio_Barra = inicio_Barra->prox;
+        bar_start = bar_start->next;
         SPR_releaseSprite(ptr2->sprite);
         MEM_free(ptr2);
     }
 }
 
-void esconde_fogo()
+void hide_fire()
 {
-    u32 tempo =  getTick();
-    if (tempo - tempoFogoR >= TEMPO_FOGO)
+    u32 time =  getTick();
+    if (time - fireTimeR >= FIRE_TIME)
     {
-        SPR_setVisibility(fogoR, HIDDEN);
+        SPR_setVisibility(fireR, HIDDEN);
     }
-    if (tempo - tempoFogoG >= TEMPO_FOGO)
+    if (time - fireTimeG >= FIRE_TIME)
     {
-        SPR_setVisibility(fogoG, HIDDEN);
+        SPR_setVisibility(fireG, HIDDEN);
     }
-    if (tempo - tempoFogoY >= TEMPO_FOGO)
+    if (time - fireTimeY >= FIRE_TIME)
     {
-        SPR_setVisibility(fogoY, HIDDEN);
+        SPR_setVisibility(fireY, HIDDEN);
     }
 }

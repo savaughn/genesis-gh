@@ -1,31 +1,31 @@
-#ifndef __MUSICAS_H__
-#define __MUSICAS_H__
+#ifndef __MUSIC_H__
+#define __MUSIC_H__
 
 #include <genesis.h>
 
-#define VEMELHO_X 231
-#define VEMELHO_X_INICIO FIX16(160.0)
-#define VERDE_X 142
-#define AMARELO_X 49
-#define AMARELO_X_INICIO FIX16(122.0)
+#define RED_X 231
+#define RED_X_START FIX16(160.0)
+#define GREEN_X 142
+#define YELLOW_X 49
+#define YELLOW_X_START FIX16(122.0)
 
-#define VEMELHO_B_X VEMELHO_X +17
-#define VEMELHO_B_X_INICIO VEMELHO_X_INICIO + FIX16(17)
-#define VERDE_B_X VERDE_X +17
-#define AMARELO_B_X AMARELO_X + 16
-#define AMARELO_B_X_INICIO AMARELO_X_INICIO + FIX16(17)
+#define RED_B_X RED_X +17
+#define RED_B_X_START RED_X_START + FIX16(17)
+#define GREEN_B_X GREEN_X +17
+#define YELLOW_B_X YELLOW_X + 16
+#define YELLOW_B_X_START YELLOW_X_START + FIX16(17)
 
 
-#define TAMANHO_SONIC 434
+#define SONIC_SIZE 434
 
-typedef enum // Cria uma ENUM para indetificar uma nota
+typedef enum // Create an ENUM to identify a note
 {
-	AMARELA = 1,
-	VERDE = 2,
-    VEMELHA = 4
-} Nota; // Define uma nota
+	YELLOW = 1,
+	GREEN = 2,
+    RED = 4
+} Note; // Define a note
 
-typedef enum // Cria uma ENUM para indetificar uma nota
+typedef enum // Create an ENUM to identify a music
 {
 	SONIC,
 	BACK_IN_BLACK,
@@ -38,87 +38,87 @@ typedef enum // Cria uma ENUM para indetificar uma nota
 	SMOOTH,
 	PHATASY,
 	NUM_MUSICAS,
-} Musica; // Define uma nota
+} Music; // Define a music
 
-const u32 tempos_sonic[434];
-const Nota notas_sonic[434];
-const u16 duracao_sonic[434];
-const u16 tamanho_sonic;
-const u8 velocidade_sonic;
-const u16 delay_sonic;
-const u8 loops_sonic;
+const u32 sonic_times[434];
+const Note sonic_notes[434];
+const u16 sonic_duration[434];
+const u16 sonic_size;
+const u8 sonic_velocity;
+const u16 sonic_delay;
+const u8 sonic_loops;
 
 
-const Nota notas_bib[223];
-const u16 duracao_bib[223];
-const u32 tempos_bib[223];
-const u16 tamanho_bib;
-const u8 velocidade_bib;
-const u16 delay_bib;
-const u8 loops_bib;
+const Note bib_notes[223];
+const u16 bib_duration[223];
+const u32 bib_times[223];
+const u16 bib_size;
+const u8 bib_velocity;
+const u16 bib_delay;
+const u8 bib_loops;
 
-const Nota notas_sor[165];
-const u16 duracao_sor[165];
-const u32 tempos_sor[165];
-const u16 tamanho_sor;
-const u8 velocidade_sor;
-const u16 delay_sor;
-const u8 loops_sor;
+const Note sor_notes[165];
+const u16 sor_duration[165];
+const u32 sor_times[165];
+const u16 sor_size;
+const u8 sor_velocity;
+const u16 sor_delay;
+const u8 sor_loops;
 
-const Nota notas_guile[259];
-const u16 duracao_guile[259];
-const u32 tempos_guile[259];
-const u16 tamanho_guile;
-const u8 velocidade_guile;
-const u16 delay_guile;
-const u8 loops_guile;
+const Note guile_notes[259];
+const u16 guile_duration[259];
+const u32 guile_times[259];
+const u16 guile_size;
+const u8 guile_velocity;
+const u16 guile_delay;
+const u8 guile_loops;
 
-const Nota notas_castle[443];
-const u16 duracao_castle[443];
-const u32 tempos_castle[443];
-const u16 tamanho_castle;
-const u8 velocidade_castle;
-const u16 delay_castle;
-const u8 loops_castle;
+const Note castle_notes[443];
+const u16 castle_duration[443];
+const u32 castle_times[443];
+const u16 castle_size;
+const u8 castle_velocity;
+const u16 castle_delay;
+const u8 castle_loops;
 
-const Nota notas_zelda[491];
-const u16 duracao_zelda[491];
-const u32 tempos_zelda[491];
-const u16 tamanho_zelda;
-const u8 velocidade_zelda;
-const u16 delay_zelda;
-const u8 loops_zelda;
+const Note zelda_notes[491];
+const u16 zelda_duration[491];
+const u32 zelda_times[491];
+const u16 zelda_size;
+const u8 zelda_velocity;
+const u16 zelda_delay;
+const u8 zelda_loops;
 
-const Nota notas_topGear[1196];
-const u16 duracao_topGear[1196];
-const u32 tempos_topGear[1196];
-const u16 tamanho_topGear;
-const u8 velocidade_topGear;
-const u16 delay_topGear;
-const u8 loops_topGear;
+const Note topGear_notes[1196];
+const u16 topGear_duration[1196];
+const u32 topGear_times[1196];
+const u16 topGear_size;
+const u8 topGear_velocity;
+const u16 topGear_delay;
+const u8 topGear_loops;
 
-const Nota notas_ateredBeast[125];
-const u16 duracao_ateredBeast[125];
-const u32 tempos_ateredBeast[125];
-const u16 tamanho_ateredBeast;
-const u8 velocidade_ateredBeast;
-const u16 delay_ateredBeast;
-const u8 loops_ateredBeast;
+const Note alteredBeast_notes[125];
+const u16 alteredBeast_duration[125];
+const u32 alteredBeast_times[125];
+const u16 alteredBeast_size;
+const u8 alteredBeast_velocity;
+const u16 alteredBeast_delay;
+const u8 alteredBeast_loops;
 
-const Nota notas_smooth[404];
-const u16 duracao_smooth[404];
-const u32 tempos_smooth[404];
-const u16 tamanho_smooth;
-const u8 velocidade_smooth;
-const u16 delay_smooth;
-const u8 loops_smooth;
+const Note smooth_notes[404];
+const u16 smooth_duration[404];
+const u32 smooth_times[404];
+const u16 smooth_size;
+const u8 smooth_velocity;
+const u16 smooth_delay;
+const u8 smooth_loops;
 
-const Nota notas_phantasy[119];
-const u16 duracao_phantasy[119];
-const u32 tempos_phantasy[119];
-const u16 tamanho_phantasy;
-const u8 velocidade_phantasy;
-const u16 delay_phantasy;
-const u8 loops_phantasy;
+const Note phantasy_notes[119];
+const u16 phantasy_duration[119];
+const u32 phantasy_times[119];
+const u16 phantasy_size;
+const u8 phantasy_velocity;
+const u16 phantasy_delay;
+const u8 phantasy_loops;
 
 #endif

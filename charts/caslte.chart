@@ -17,7 +17,7 @@
 }
 [Events]
 {
-  9024 = E "section parte rápida"
+  9024 = E "section fast part"
   15168 = E "section parte 2"
   22080 = E "section parte 3"
   28224 = E "section parte 4"

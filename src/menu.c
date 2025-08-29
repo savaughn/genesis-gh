@@ -2,52 +2,52 @@
 #include "string.h"
 #include "bg.h"
 
-#define CENTRO_X 20
-#define CENTRO_Y 14
+#define CENTER_X 20
+#define CENTER_Y 14
 
-const Opcao opcoes_pause[NUM_OPCOES_PAUSA] = {
-    {CENTRO_X-2, CENTRO_Y, "VOLTAR"},
-    {CENTRO_X-2, CENTRO_Y+1, "SAIR"},
-    {CENTRO_X-2, CENTRO_Y+2, "REINICIAR"},
+const Option pause_options[NUM_PAUSE_OPTIONS] = {
+    {CENTER_X-2, CENTER_Y, "RETURN"},
+    {CENTER_X-2, CENTER_Y+1, "EXIT"},
+    {CENTER_X-2, CENTER_Y+2, "RESTART"},
 };
 
-const OpcaoMusica opcoes_musicas[NUM_MUSICAS] = {
-    {CENTRO_X-2, CENTRO_Y-4, "Green Hill Zone", &sonic_cover, 3},
-    {CENTRO_X-1, CENTRO_Y-4, "Back in Black",  &sonic_cover, 1},
-    {CENTRO_X-2, CENTRO_Y-4, "Streets of Rage",  &sor_conver, 2},
-    {CENTRO_X, CENTRO_Y-4, "Guile theme",  &guile_cover, 2},
-    {CENTRO_X-2, CENTRO_Y-4, "Zelda-overworld",  &zelda_cover, 3},
-    {CENTRO_X-2, CENTRO_Y-4, "Dracula's castle",  &sont_conver, 2},
-    {CENTRO_X-2, CENTRO_Y-4, "Top Gear",  &topgear_cover, 3},
-    {CENTRO_X-2, CENTRO_Y-4, "Altered Beast",  &alterd_cover, 1},
-    {CENTRO_X-2, CENTRO_Y-4, "Smooth Criminal",  &moonwalker_conver, 1},
-    {CENTRO_X-2, CENTRO_Y-4, "Motavia Town",  &phantasy_cover, 1},
+const MusicOption music_options[NUM_MUSICAS] = {
+    {CENTER_X-2, CENTER_Y-4, "Green Hill Zone", &sonic_cover, 3},
+    {CENTER_X-1, CENTER_Y-4, "Back in Black",  &sonic_cover, 1},
+    {CENTER_X-2, CENTER_Y-4, "Streets of Rage",  &sor_conver, 2},
+    {CENTER_X, CENTER_Y-4, "Guile theme",  &guile_cover, 2},
+    {CENTER_X-2, CENTER_Y-4, "Zelda-overworld",  &zelda_cover, 3},
+    {CENTER_X-2, CENTER_Y-4, "Dracula's castle",  &sont_conver, 2},
+    {CENTER_X-2, CENTER_Y-4, "Top Gear",  &topgear_cover, 3},
+    {CENTER_X-2, CENTER_Y-4, "Altered Beast",  &alterd_cover, 1},
+    {CENTER_X-2, CENTER_Y-4, "Smooth Criminal",  &moonwalker_conver, 1},
+    {CENTER_X-2, CENTER_Y-4, "Motavia Town",  &phantasy_cover, 1},
 };
 
-const Opcao opcoes_menu_inicial =  {CENTRO_X -8, CENTRO_Y, "Pressione Start"};
+const Option initial_menu_option =  {CENTER_X -8, CENTER_Y, "Press Start"};
 
-const Opcao opcoes_fim[NUM_OPCOES_FIM] = {
-    {CENTRO_X-2, CENTRO_Y, "SAIR"},
-    {CENTRO_X-2, CENTRO_Y+1, "REINICIAR"},
+const Option end_options[NUM_END_OPTIONS] = {
+    {CENTER_X-2, CENTER_Y, "EXIT"},
+    {CENTER_X-2, CENTER_Y+1, "RESTART"},
 };
 
-void mostra_menu_inicial()
+void show_initial_menu()
 {
-    VDP_drawText(opcoes_menu_inicial.texto, opcoes_menu_inicial.x,opcoes_menu_inicial.y);
+    VDP_drawText(initial_menu_option.text, initial_menu_option.x, initial_menu_option.y);
 }
 
-void mostra_menu_pausa()
+void show_pause_menu()
 {
-    for(u8 i = 0; i < NUM_OPCOES_PAUSA; i++)
+    for(u8 i = 0; i < NUM_PAUSE_OPTIONS; i++)
     {
-        VDP_drawText(opcoes_pause[i].texto, opcoes_pause[i].x, opcoes_pause[i].y);
+        VDP_drawText(pause_options[i].text, pause_options[i].x, pause_options[i].y);
     }
 }
 
-void mostra_menu(const Opcao *opcoes, u8 tamanho)
+void show_menu(const Option *options, u8 size)
 {
-    for(u8 i = 0; i < tamanho; i++)
+    for(u8 i = 0; i < size; i++)
     {
-        VDP_drawText(opcoes[i].texto, opcoes[i].x, opcoes[i].y);
+        VDP_drawText(options[i].text, options[i].x, options[i].y);
     }
 }
