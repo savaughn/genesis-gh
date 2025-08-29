@@ -62,22 +62,22 @@ int main(_Bool)
     JOY_setEventHandler(&control_Handler);
 
     s16 score = 0;
-    s8 consecutivas = 0;
-    u8 multiplicador = 1;
-    bool perdeu = FALSE;
+    s8 consecutiveCount = 0;
+    u8 multiplier = 1;
+    bool isGameOver = FALSE;
 
     u32 init_time = getTick();
     u32 pause_time = 0;
     u32 final_time = 0xFFFFFFFF;
     bool start_music = 0;
     bool notes_remaining = 1;
-    u16 nota_index = 0;
+    u16 note_index = 0;
     bool resume = 0;
 
     u32 creditos_time = 0xFFFFFFFF;
 
     enum States state = MAIN_MENU;
-    enum States state_anterior = -1;
+    enum States previous_state = -1;
 
     Music music = BACK_IN_BLACK;
 
@@ -98,7 +98,7 @@ int main(_Bool)
     
     s16 xOffsetsky[32]= {0};
 
-    s8 menu_movendo = 0;
+    s8 selected_menu_option = 0;
 
     const u16 k7_colors[] = {0x02e, 0xa00, 0x06a, 0x0a0};
     u8 color_index;
@@ -110,12 +110,12 @@ int main(_Bool)
         switch (state)
         {
             case CREDITS:
-            if (state_anterior != state)
+            if (previous_state != state)
             {
                 VDP_clearPlane(BG_A, TRUE);
                 VDP_setVerticalScroll(BG_A, 0);
                 
-                state_anterior = state;
+                previous_state = state;
                 VDP_drawImageEx(BG_A, &creditos, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, TRUE, TRUE);
                 creditos_time = getTick();
             }
@@ -126,7 +126,7 @@ int main(_Bool)
             }
             break;
         case MAIN_MENU:
-            if (state_anterior != state)
+            if (previous_state != state)
             {
                 VDP_setTextPlane(BG_B);
                 // VDP_clearPlane(BG_A, TRUE);
@@ -138,7 +138,7 @@ int main(_Bool)
 
                 show_initial_menu();
                 cursor = SPR_addSprite(&Cursor, 10 * 8, 14 * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
-                state_anterior = state;
+                previous_state = state;
                 VDP_drawImageEx(BG_A, &concert, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
                 PAL_fadeInPalette(PAL0, concert.palette->data, 20, FALSE);
                 PAL_setPalette(PAL0, concert.palette->data, DMA);
@@ -154,7 +154,7 @@ int main(_Bool)
             }          
             break;
         case TRACKS:
-            if (state_anterior != state)
+            if (previous_state != state)
             {
                 VDP_setTextPlane(BG_B);
                 yOffsetBg =0;
@@ -166,7 +166,7 @@ int main(_Bool)
                 PAL_setColor(15, 0x00e); // set color text red
                 
                 cursorY = 0;
-                state_anterior = state;
+                previous_state = state;
                 J1DOWN = 0;
                 J1UP = 0;
                 VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 15, -9, FALSE, TRUE);
@@ -178,13 +178,13 @@ int main(_Bool)
                 PAL_setPalette(PAL3, sonic_cover.palette->data, DMA);
                 VDP_drawText(music_options[cursorY].text, music_options[cursorY].x,music_options[cursorY ].y);
                 VDP_drawText(music_options[cursorY + 1].text, music_options[cursorY + 1].x, 26);
-                menu_movendo = 0;
+                selected_menu_option = 0;
                 color_index = 0;
                 VDP_setHorizontalScrollTile(BG_A, 0, offset_mask, 28, DMA);
             }
             if (J1DOWN)
             {
-                menu_movendo = 1;
+                selected_menu_option = 1;
                 J1DOWN = 0;
                 if (cursorY < TRACK_COUNT -1)
                 {
@@ -214,7 +214,7 @@ int main(_Bool)
             }
             if (J1UP)
             {
-                menu_movendo = -1;
+                selected_menu_option = -1;
                 J1UP = 0;
                 if (cursorY > 0)
                 {
@@ -241,15 +241,15 @@ int main(_Bool)
                 VDP_drawImageEx(BG_B, music_options[cursorY].image, TILE_ATTR_FULL(PAL3, TRUE, FALSE, FALSE, k7.tileset->numTile), 1, 7, FALSE, TRUE);
                 PAL_setPalette(PAL3, music_options[cursorY].image->palette->data, DMA);   
             }
-            if(menu_movendo)
+            if(selected_menu_option)
             {
-                yOffsetBg = yOffsetBg + 8*menu_movendo;
+                yOffsetBg = yOffsetBg + 8*selected_menu_option;
                 VDP_setVerticalScroll(BG_A, yOffsetBg);
                 // VDP_setHorizontalScrollTile(BG_A, 0, offset_mask, 28, DMA);
                 if (yOffsetBg == 128 || yOffsetBg == -128)
                 {
                     yOffsetBg = 0;
-                    menu_movendo =0;
+                    selected_menu_option =0;
                     VDP_drawText(music_options[cursorY].text, music_options[cursorY].x, music_options[cursorY].y);
                     if (cursorY == TRACK_COUNT - 1)
                     {
@@ -324,7 +324,7 @@ int main(_Bool)
             }
             break;
         case GAME:
-            if (state_anterior != state)
+            if (previous_state != state)
             {
                 VDP_setTextPlane(BG_A);
                 if (resume == 0)
@@ -369,10 +369,10 @@ int main(_Bool)
                     SPR_setDepth(fireG, SPR_MIN_DEPTH);
                     SPR_setDepth(fireY, SPR_MIN_DEPTH);
 
-                    nota_index = 0;
+                    note_index = 0;
                     score = 0;
-                    consecutivas = 0;
-                    multiplicador = 1;
+                    consecutiveCount = 0;
+                    multiplier = 1;
 
                     init_time = getTick();
                     start_music = 0;
@@ -503,7 +503,7 @@ int main(_Bool)
                     resume = 0;
                 }
 
-                state_anterior = state;
+                previous_state = state;
             }
             if (getTick() - init_time >= delay && !start_music)
             {
@@ -512,35 +512,35 @@ int main(_Bool)
 
                 start_music = 1;
             }
-            while (notes_remaining && (getTick() - init_time >= times[nota_index]))
+            while (notes_remaining && (getTick() - init_time >= times[note_index]))
             {
-                if (notes[nota_index] & YELLOW)
+                if (notes[note_index] & YELLOW)
                 {
                     insert_Note(SPR_addSprite(&btY, 0, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), YELLOW_X_START, TRACK_HEIGHT, YELLOW);
-                    if (durations[nota_index] > 0)
+                    if (durations[note_index] > 0)
                     {
-                        insert_Bar(SPR_addSprite(&barraY, YELLOW_B_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), YELLOW_B_X_START, TRACK_HEIGHT, YELLOW, durations[nota_index]);
+                        insert_Bar(SPR_addSprite(&barraY, YELLOW_B_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), YELLOW_B_X_START, TRACK_HEIGHT, YELLOW, durations[note_index]);
                     }
                 }
-                else if (notes[nota_index] & GREEN)
+                else if (notes[note_index] & GREEN)
                 {
                     insert_Note(SPR_addSprite(&btG, GREEN_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), GREEN_X_START, TRACK_HEIGHT, GREEN);
-                    if (durations[nota_index] > 0)
+                    if (durations[note_index] > 0)
                     {
-                        insert_Bar(SPR_addSprite(&barraG, GREEN_B_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), GREEN_B_X_START, TRACK_HEIGHT, GREEN, durations[nota_index]);
+                        insert_Bar(SPR_addSprite(&barraG, GREEN_B_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), GREEN_B_X_START, TRACK_HEIGHT, GREEN, durations[note_index]);
                     }
                 }
-                else if (notes[nota_index] & RED)
+                else if (notes[note_index] & RED)
                 {
                     insert_Note(SPR_addSprite(&btR, RED_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), RED_X_START, TRACK_HEIGHT, RED);
-                    if (durations[nota_index] > 0)
+                    if (durations[note_index] > 0)
                     {
-                        insert_Bar(SPR_addSprite(&barraR, RED_B_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), RED_B_X_START, TRACK_HEIGHT, RED, durations[nota_index]);
+                        insert_Bar(SPR_addSprite(&barraR, RED_B_X, TRACK_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), RED_B_X_START, TRACK_HEIGHT, RED, durations[note_index]);
                     }
                 }
-                if (nota_index < music_size-1)
+                if (note_index < music_size-1)
                 {
-                    nota_index++;
+                    note_index++;
                 }
                 else
                 {
@@ -553,21 +553,21 @@ int main(_Bool)
             partial = updatePosition_Note(velocity, partial);
             if (partial > 0)
             {
-                score = score + multiplicador;
-                if (multiplicador < 4)
+                score = score + multiplier;
+                if (multiplier < 4)
                 {
                     if(vu->frameInd == 10)
                     {
                         SPR_nextFrame(vu);
                     }
-                    consecutivas++;
+                    consecutiveCount++;
                     SPR_nextFrame(vu);
 
-                    if (consecutivas == 10)
+                    if (consecutiveCount == 10)
                     {
-                        multiplicador++;
+                        multiplier++;
                         SPR_nextFrame(mult_s);
-                        consecutivas = 0;
+                        consecutiveCount = 0;
                     }
 
                 }
@@ -576,19 +576,19 @@ int main(_Bool)
             {
                 SPR_setFrame(vu, 0);
                 SPR_setFrame(mult_s, 0);
-                KLog_S2("consecutivas: ",consecutivas," multiplicador: ", multiplicador);
-                if(consecutivas < 1 && multiplicador == 1)
+                KLog_S2("consecutiveCount: ",consecutiveCount," multiplier: ", multiplier);
+                if(consecutiveCount < 1 && multiplier == 1)
                 {
-                    consecutivas --;
+                    consecutiveCount --;
                 }
                 else
                 {
-                    consecutivas = 0;
-                    multiplicador = 1;
+                    consecutiveCount = 0;
+                    multiplier = 1;
                 }
-                if(consecutivas == -5)
+                if(consecutiveCount == -5)
                 {
-                    perdeu = TRUE;
+                    isGameOver = TRUE;
                 }
             }
 
@@ -596,14 +596,14 @@ int main(_Bool)
 
             partial = 0;
             partial = updatePosition_Bar(velocity, partial);
-            score = partial * multiplicador + score;
+            score = partial * multiplier + score;
 
             if (J1A && (J1ACount + 50) > (u16)getTick())
             {
                 score--;
                 J1A = 0;
-                consecutivas = 0;
-                multiplicador = 1;
+                consecutiveCount = 0;
+                multiplier = 1;
                 SPR_setFrame(vu, 0);
                 SPR_setFrame(mult_s, 0);
                 XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
@@ -612,8 +612,8 @@ int main(_Bool)
             {
                 score--;
                 J1B = 0;
-                consecutivas = 0;
-                multiplicador = 1;
+                consecutiveCount = 0;
+                multiplier = 1;
                 SPR_setFrame(vu, 0);
                 SPR_setFrame(mult_s, 0);
                 XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
@@ -622,14 +622,14 @@ int main(_Bool)
             {
                 score--;
                 J1C = 0;
-                consecutivas = 0;
-                multiplicador = 1;
+                consecutiveCount = 0;
+                multiplier = 1;
                 SPR_setFrame(vu, 0);
                 SPR_setFrame(mult_s, 0);
                 XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
             }
 
-            SPR_setAnim(guitarrista, multiplicador - 1);
+            SPR_setAnim(guitarrista, multiplier - 1);
 
             if (J1S)
             {
@@ -677,10 +677,10 @@ int main(_Bool)
             sprintf(text, "%05d", score);
             VDP_drawText(text, 34, SCORE_Y);
 
-            if((notes_remaining  == 0 && getTick() - final_time > 1000) || perdeu)
+            if((notes_remaining  == 0 && getTick() - final_time > 1000) || isGameOver)
             {
                 state = TRACK_END;
-                perdeu = FALSE;
+                isGameOver = FALSE;
 
                 clear_lists();
                 SPR_releaseSprite(btr2);
@@ -704,20 +704,20 @@ int main(_Bool)
 
             break;
         case PAUSE:
-            if (state_anterior != state)
+            if (previous_state != state)
             {
                 VDP_setTextPlane(BG_A);
-                state_anterior = state;
+                previous_state = state;
                 show_pause_menu();
                 // PAL_setPalette(PAL3, Cursor.palette->data, DMA);
                 cursorY = 14;
                 cursorX = 17 * 8;
                 cursor = SPR_addSprite(&Cursor, cursorX, cursorY * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
                 XGM_pausePlay();
-                guitarrista->timer = 0;
-                fireR->timer = 0;
-                fireG->timer = 0;
-                fireY->timer = 0;
+                if (guitarrista) guitarrista->timer = 0;
+                if (fireR) fireR->timer = 0;
+                if (fireG) fireG->timer = 0;
+                if (fireY) fireY->timer = 0;
             }
             if (J1DOWN)
             {
@@ -764,12 +764,14 @@ int main(_Bool)
                 {
                     state = GAME;
                     resume = 1;
-                    init_time = getTick() - pause_time + init_time;
+                    // Adjust init_time to account for time spent in pause
+                    u32 pause_duration = getTick() - pause_time;
+                    init_time += pause_duration;
                     XGM_resumePlay();
-                    guitarrista->timer = 1;
-                    fireR->timer = 1;
-                    fireG->timer = 1;
-                    fireY->timer = 1;
+                    if (guitarrista) guitarrista->timer = 1;
+                    if (fireR) fireR->timer = 1;
+                    if (fireG) fireG->timer = 1;
+                    if (fireY) fireY->timer = 1;
                 }
                 //sair
                 else if (cursorY == 15)
@@ -819,12 +821,12 @@ int main(_Bool)
             }
             break;
         case TRACK_END:
-            if (state_anterior != state)
+            if (previous_state != state)
             {
                 VDP_setTextPlane(BG_B);
                 VDP_resetScreen();
                 PAL_setColors(0, (u16 *)palette_black, 64, DMA); // set all palettes to black
-                state_anterior = state;
+                previous_state = state;
                 
                 // Show current track name
                 VDP_drawText(music_options[selected_music_index].text, music_options[selected_music_index].x, music_options[selected_music_index].y);
