@@ -800,6 +800,7 @@ int main(_Bool)
                 else
                 {
                     state = GAME;
+                    resume = 0; // Reset resume flag to force full initialization
                     clear_lists();
                     SPR_releaseSprite(btr2);
                     SPR_releaseSprite(btg2);
@@ -889,6 +890,7 @@ int main(_Bool)
                  if (cursorY == 1) // RESTART option
                  {
                     state = GAME;
+                    resume = 0; // Ensure full initialization
                  }
                  else // EXIT option (cursorY == 0)
                  {
