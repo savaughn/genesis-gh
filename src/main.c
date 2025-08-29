@@ -1,8 +1,3 @@
-/**
- * Hello World Example
- * Created With Genesis-Code extension for Visual Studio Code
- * Use "Genesis Code: Compile" command to compile this program.
- **/
 #include <genesis.h>
 #include <string.h>
 #include "tracks.h"
@@ -28,7 +23,7 @@ Sprite *btr2, *btg2, *bty2;
 Sprite *cursor;
 Sprite *vu;
 Sprite *mult_s;
-Sprite *guitarrista;
+Sprite *guitarist;
 
 char text[64];
 
@@ -355,7 +350,7 @@ int main(_Bool)
 
                     vu = SPR_addSprite(&Vu, 270 , VU_HEIGHT, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
                     mult_s = SPR_addSprite(&Mult, 290 , MULTIPLIER_HEIGHT, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
-                    guitarrista = SPR_addSprite(&Guitar,  260 , GUITARIST_HEIGHT, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                    guitarist = SPR_addSprite(&Guitar,  260 , GUITARIST_HEIGHT, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
 
                     SPR_setVisibility(fireR, HIDDEN);
                     SPR_setVisibility(fireG, HIDDEN);
@@ -629,7 +624,7 @@ int main(_Bool)
                 XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
             }
 
-            SPR_setAnim(guitarrista, multiplier - 1);
+            SPR_setAnim(guitarist, multiplier - 1);
 
             if (J1S)
             {
@@ -693,7 +688,7 @@ int main(_Bool)
 
                 SPR_releaseSprite(vu);
                 SPR_releaseSprite(mult_s);
-                SPR_releaseSprite(guitarrista);
+                SPR_releaseSprite(guitarist);
                 VDP_clearTextLine(SCORE_Y);
 
                 XGM_stopPlay();
@@ -714,7 +709,7 @@ int main(_Bool)
                 cursorX = 17 * 8;
                 cursor = SPR_addSprite(&Cursor, cursorX, cursorY * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
                 XGM_pausePlay();
-                if (guitarrista) guitarrista->timer = 0;
+                if (guitarist) guitarist->timer = 0;
                 if (fireR) fireR->timer = 0;
                 if (fireG) fireG->timer = 0;
                 if (fireY) fireY->timer = 0;
@@ -768,7 +763,7 @@ int main(_Bool)
                     u32 pause_duration = getTick() - pause_time;
                     init_time += pause_duration;
                     XGM_resumePlay();
-                    if (guitarrista) guitarrista->timer = 1;
+                    if (guitarist) guitarist->timer = 1;
                     if (fireR) fireR->timer = 1;
                     if (fireG) fireG->timer = 1;
                     if (fireY) fireY->timer = 1;
@@ -788,7 +783,7 @@ int main(_Bool)
 
                     SPR_releaseSprite(vu);
                     SPR_releaseSprite(mult_s);
-                    SPR_releaseSprite(guitarrista);
+                    SPR_releaseSprite(guitarist);
                     VDP_clearTextLine(SCORE_Y);
 
                     XGM_stopPlay();
@@ -812,7 +807,7 @@ int main(_Bool)
 
                     SPR_releaseSprite(vu);
                     SPR_releaseSprite(mult_s);
-                    SPR_releaseSprite(guitarrista);
+                    SPR_releaseSprite(guitarist);
                     
                     XGM_stopPlay();
 
